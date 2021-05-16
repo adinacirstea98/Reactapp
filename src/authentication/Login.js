@@ -2,14 +2,16 @@ import React, { useRef, useState } from "react"
 import { Form, Button, Card, Alert } from "react-bootstrap"
 import { useAuth } from "../contexts/AuthContext"
 import { Link, useHistory } from "react-router-dom"
+import { useCookies } from "react-cookie"
 
 export default function Login() {
   const emailRef = useRef()
   const passwordRef = useRef()
-  const { login } = useAuth()
+  const { login, currentUser } = useAuth()
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
   const history = useHistory()
+  // const [cookies, setCookie, removeCookie] = useCookies(['cookie-name']);
 
   async function handleSubmit(e) {
     e.preventDefault()
@@ -18,7 +20,8 @@ export default function Login() {
       setError("")
       setLoading(true)
       const user = await login(emailRef.current.value, passwordRef.current.value);
-      console.log(user);
+      console.log("1", user);
+      console.log(currentUser);
       history.push("/")
     } catch {
       setError("Failed to log in")

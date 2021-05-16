@@ -1,27 +1,28 @@
 import React from 'react';
 import Navbar from './components/Navbar';
 import './App.css';
-import { Container } from "react-bootstrap"
-import Home from './components/pages/Home';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Services from './components/pages/Services';
 import Products from './components/pages/Products';
-import Authentication from './components/pages/Authentication';
-import Dashboard from './authentication/Dashboard'
+import { AuthProvider } from "./contexts/AuthContext";
+import PrivateRoute from "./authentication/PrivateRoute";
+import Dashboard from "./components/pages/Dashboard";
+import Authentication from "./components/pages/Authentication";
 
 function App() {
   return (
     <>
-      <Router>
-        <Navbar />
-        <Switch>
-          <Route path='/' exact component={Home} />
-          <Route path='/services' component={Services} />
-          <Route path='/products' component={Products} />
-          <Route path='/signup' component={Authentication} />
-          {/* <Route exact path="/" component={Dashboard} /> */}
-        </Switch>
-      </Router>
+      <AuthProvider>
+        <Router>
+          <Navbar />
+          <Switch>
+            <PrivateRoute exact path="/" component={Dashboard} />
+            <Route path='/services' component={Services} />
+            <Route path='/products' component={Products} />
+            <Authentication/>
+          </Switch>
+        </Router>
+      </AuthProvider>
     </>
   );
 }

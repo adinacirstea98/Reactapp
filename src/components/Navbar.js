@@ -3,8 +3,11 @@ import { Link } from 'react-router-dom';
 import './Navbar.css';
 import { BsBook } from 'react-icons/bs';
 import { Button } from './Button';
+import { useAuth } from '../contexts/AuthContext';
+
 
 function Navbar() {
+  const {currentUser} = useAuth();
   const [click, setClick] = useState(false);
   const [button, setButton] = useState(true);
 
@@ -58,15 +61,39 @@ function Navbar() {
                 Prod
               </Link>
             </li>
-
-            <li className='nav-item'>
-              <Link to='/signup'
-                className='nav-links'
-                onClick={closeMobileMenu}
-              >
-                Account
-              </Link>
-            </li>
+            {
+              currentUser ? (
+                <li className='nav-item'>
+                  <Link to='/logout'
+                    className='nav-links'
+                    onClick={closeMobileMenu}
+                  >
+                    Log Out
+                  </Link>
+                </li>
+              ) : (
+                <>
+                  <li className='nav-item'>
+                    <Link to='/login'
+                      className='nav-links'
+                      onClick={closeMobileMenu}
+                    >
+                      Log In
+                    </Link>
+                  </li>
+                  <li className='nav-item'>
+                    <Link to='/signup'
+                      className='nav-links'
+                      onClick={closeMobileMenu}
+                    >
+                      Sign Up
+                    </Link>
+                  </li>
+                </>
+              )
+            }
+            
+            
           </ul>
           {/* {button && <Button buttonStyle='btn--outline'>SIGN UP</Button>} */}
         </div>
