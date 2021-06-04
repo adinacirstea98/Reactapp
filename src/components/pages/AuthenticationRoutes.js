@@ -6,10 +6,12 @@ import Logout from "../../authentication/Logout"
 import ForgotPassword from "../../authentication/ForgotPassword"
 import { Container } from "react-bootstrap"
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom"
+import { useAuth } from '../../contexts/AuthContext';
 
 
+export default function AuthenticationRoutes() {
+  const {currentUser} = useAuth();
 
-export default function SignUp() {
   // return <h1 className='sign-up'>LIKE & SUBSCRIBE</h1>;
   return (
     <Container
@@ -18,10 +20,15 @@ export default function SignUp() {
     >
       <div>
         <div className="w-100" style={{ maxWidth: "400px" }}>
-          <Route path="/login" component={Login} />
-          <Route path="/logout" component={Logout} />
-          <Route path="/signup" component={Signup} />
-          <Route path="/forgot-password" component={ForgotPassword} />
+          {currentUser ? (
+            <Route path="/logout" component={Logout} />
+          ) : (
+            <>
+              <Route path="/login" component={Login} />
+              <Route path="/signup" component={Signup} />
+              <Route path="/forgot-password" component={ForgotPassword} />
+            </>
+          )}   
         </div>
       </div>
     </Container>
