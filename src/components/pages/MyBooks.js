@@ -66,6 +66,7 @@ function MyBooks() {
         return (
           <div className='col-lg-4 mb-3' key={item._id}>
             <BookCard
+              id={item._id}
               thumbnail={item.imagePath}
               title={item.title}
               // pageCount={item.volumeInfo.pageCount}

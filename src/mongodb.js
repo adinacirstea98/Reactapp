@@ -1,4 +1,5 @@
 const MongoClient = require('mongodb').MongoClient;
+const ObjectID = require('mongodb').ObjectID;
 const assert = require('assert');
 const express = require('express');
 const multer = require('multer')
@@ -100,15 +101,27 @@ app.post("/add-book", uploadFiles, async function(request, result) {
 
     const imagePath = (image[0].destination || "").replace("public/", "") + (image[0].filename || "");
     const pdfPath = (pdf[0].destination || "").replace("public/", "") + (pdf[0].filename || "");
-    const obj = { ...data, imagePath, pdfPath };
+    const bookObj = { ...data, imagePath, pdfPath };
     try {
-      const writeResult = await client.db("BookLand").collection("books").insertOne(obj);
+      const writeResult = await client.db("BookLand").collection("books").insertOne(bookObj);
       return result.status(200).send(writeResult.ops);
     } catch (error) {
       return result.status(500).json(error);
     }
   });
-})
+});
+
+app.delete("/delete-book/:id", async function(request, result) {
+  console.log(request.params);
+  try {
+    const query = { _id: ObjectID(request.params.id) }
+    const writeResult = await client.db("BookLand").collection("books").remove(query);
+    console.log(result);
+    return result.status(200).send({id: request.params.id});
+  } catch (error) {
+    return result.status(500).json(error);
+  }
+});
 
 const onClose = () => {
   server.close();

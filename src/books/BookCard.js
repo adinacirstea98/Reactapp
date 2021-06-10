@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import { Card, CardTitle, CardImg, CardBody, Button, Modal } from 'reactstrap';
+
 const BookCard = ({
+  id,
   thumbnail,
   title,
   pageCount,
@@ -13,7 +16,19 @@ const BookCard = ({
 }) => {
   // States
   const [modal, setModal] = useState(false);
-  const toggle = () => setModal(!modal);
+  const handleToggleModal = () => setModal(!modal);
+  const handleDelete = () => {
+    axios({
+      method: "delete",
+      url: "http://localhost:8080/delete-book/" + id,
+    })
+    .then(res => {
+        const { data } = res;
+    })
+    .catch(err => {
+        console.error(err.response);
+    })
+  };
 
   return (
     <Card style={{ width: '233px' }} className='m-auto'>
@@ -25,9 +40,10 @@ const BookCard = ({
       />
       <CardBody>
         <CardTitle className='card-title'>{title}</CardTitle>
-        <Button onClick={toggle}>More info</Button>
+        <Button onClick={handleToggleModal}>More info</Button>
+        <Button onClick={handleDelete}>Delete</Button>
       </CardBody>
-      <Modal isOpen={modal} toggle={toggle}>
+      <Modal isOpen={modal} toggle={handleToggleModal}>
         <div className='modal-header d-flex justify-content-center'>
           <h5 className='modal-title text-center' id='exampleModalLabel'>
             {title}
@@ -36,7 +52,7 @@ const BookCard = ({
             aria-label='Close'
             className='close'
             type='button'
-            onClick={toggle}
+            onClick={handleToggleModal}
           >
             <span aria-hidden={true}>X</span>
           </button>

@@ -111,10 +111,9 @@ function AddBook() {
           })
           .then(res => {
               const { data } = res;
-              console.log(res);
           })
           .catch(err => {
-              console.log(err.response);
+              console.error(err.response);
           })
           .finally(() => {
               setLoading(false);
