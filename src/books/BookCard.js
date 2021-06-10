@@ -6,7 +6,7 @@ const BookCard = ({
   pageCount,
   language,
   description,
-  authors,
+  author,
   publisher,
   previewLink,
   infoLink
@@ -47,7 +47,7 @@ const BookCard = ({
             <div>
               <p>Page Count: {pageCount}</p>
               <p>Language : {language}</p>
-              <p>Authors : {authors}</p>
+              <p>Author : {author}</p>
               <p>Publisher : {publisher}</p>
             </div>
           </div>

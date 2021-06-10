@@ -2,6 +2,7 @@ import React, { useState } from "react"
 import { Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
 import axios from 'axios';
 import styled, { createGlobalStyle, css } from 'styled-components';
+import { useAuth } from "../../contexts/AuthContext";
 
 const GlobalStyle = createGlobalStyle`
   html {
@@ -85,16 +86,21 @@ const StyledFieldset = styled.fieldset`
 
 function AddBook() {
     const [loading, setLoading] = useState(false);
+    const { currentUser } = useAuth();
+    const { uid } = currentUser;
     const handleSubmit = (event) => {
         event.preventDefault();
         const { target } = event;
         const formData = new FormData();
+        formData.append("userId", uid);
         for (let el of target) {
+          if (el.name) {
             if (el.files) {
-                formData.append(el.name, el.files[0]);
+              formData.append(el.name, el.files[0]);
             } else {
-                formData.append(el.name, el.value);
+              formData.append(el.name, el.value);
             }
+          }
         }
         setLoading(true);
         axios({
@@ -138,6 +144,15 @@ function AddBook() {
                             <option value="article">Article</option>
                             <option value="novel">Novel</option>
                             <option value="story">Story</option>
+                        </Input>
+                    </FormGroup>
+                    <FormGroup>
+                        <Label for="language">Language</Label>
+                        <Input type="select" name="language" id="language">
+                            <option value="english">English</option>
+                            <option value="french">French</option>
+                            <option value="german">German</option>
+                            <option value="romanian">Romanian</option>
                         </Input>
                     </FormGroup>
                     <FormGroup>

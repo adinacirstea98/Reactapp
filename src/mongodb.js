@@ -17,10 +17,10 @@ const cors = require('cors');
 
 const storageFiles = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'uploads/')
+    cb(null, 'public/uploads/')
   },
   filename: function (req, file, cb) {
-    cb(null, Date.now() + '-' + file.originalname )
+    cb(null, Date.now() + '-' + file.originalname)
   }
 })
 
@@ -85,27 +85,29 @@ app.get("/my-books", async function(request, result) {
 */
 
 app.post("/add-book", uploadFiles, async function(request, result) {
-  console.log("---------------------------------------------------");
-  console.log(request.body);
-  // console.log(request.files);
-  // console.log(request.file);
-  // insert
-
-  let obj = {
-    "title": request.body.title,
-    "category": request.body.category,
-    "author": request.body.author
-  }
-
-  //const books = client.db("BookLand").collection("books").find(query).toArray();
-  uploadFiles(request, result, function (err) {
+  const data = request.body || {};
+  const { image = [{}], pdf = [{}] } = request.files || {};
+    
+  uploadFiles(request, result, async function (err) {
     if (err instanceof multer.MulterError) {
       return result.status(500).json(err);
     } else if (err) {
       return result.status(500).json(err);
     }
-    return result.status(200).send({});
-  })
+
+    delete data["image"];
+    delete data["pdf"];
+
+    const imagePath = (image[0].destination || "").replace("public/", "") + (image[0].filename || "");
+    const pdfPath = (pdf[0].destination || "").replace("public/", "") + (pdf[0].filename || "");
+    const obj = { ...data, imagePath, pdfPath };
+    try {
+      const writeResult = await client.db("BookLand").collection("books").insertOne(obj);
+      return result.status(200).send(writeResult.ops);
+    } catch (error) {
+      return result.status(500).json(error);
+    }
+  });
 })
 
 const onClose = () => {

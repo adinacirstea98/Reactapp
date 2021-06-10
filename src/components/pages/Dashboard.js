@@ -59,10 +59,9 @@ function Books() {
         .then(res => {
           const { data } = res;
           setCards(data);
-          console.log(res);
         })
         .catch(err => {
-          console.log(err.response);
+          console.error(err.response);
         })
         .finally(() => {
           setLoading(false);

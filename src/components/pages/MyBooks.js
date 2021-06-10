@@ -13,7 +13,7 @@ import { useHistory } from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import axios from 'axios';
-import { useAuth } from "../../contexts/AuthContext"
+import { useAuth } from "../../contexts/AuthContext";
 import BookCard from '../../books/BookCard';
 import '../../App.css';
 
@@ -43,11 +43,10 @@ function MyBooks() {
     .then(res => {
         const { data } = res;
         setCards(data);
-        console.log(res);
         toast("books loaded");
     })
     .catch(err => {
-        console.log(err.response);
+        console.error(err.response);
         toast("books failed");
     })
     .finally(() => {
@@ -64,23 +63,18 @@ function MyBooks() {
       );
     } else {
       const items = cards.map((item, i) => {
-        let thumbnail = '';
-        if (item.volumeInfo.imageLinks) {
-          thumbnail = item.volumeInfo.imageLinks.thumbnail;
-        }
-
         return (
-          <div className='col-lg-4 mb-3' key={item.id}>
+          <div className='col-lg-4 mb-3' key={item._id}>
             <BookCard
-              thumbnail={thumbnail}
-              title={item.volumeInfo.title}
-              pageCount={item.volumeInfo.pageCount}
-              language={item.volumeInfo.language}
-              authors={item.volumeInfo.authors}
-              publisher={item.volumeInfo.publisher}
-              description={item.volumeInfo.description}
-              previewLink={item.volumeInfo.previewLink}
-              infoLink={item.volumeInfo.infoLink}
+              thumbnail={item.imagePath}
+              title={item.title}
+              // pageCount={item.volumeInfo.pageCount}
+              language={item.language}
+              author={item.author}
+              // publisher={item.volumeInfo.publisher}
+              description={item.description}
+              previewLink={item.pdfPath}
+              // infoLink={item.volumeInfo.infoLink}
             />
           </div>
         );

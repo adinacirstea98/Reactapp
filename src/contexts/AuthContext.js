@@ -18,7 +18,6 @@ export function AuthProvider({ children }) {
 
     function login(email, password) {
         return auth.setPersistence(firebase.auth.Auth.Persistence.SESSION).then(() => {
-            console.log("here");
             return auth.signInWithEmailAndPassword(email, password)
         }).catch((error) => {
             // Handle Errors here.

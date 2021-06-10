@@ -19,8 +19,6 @@ export default function Login() {
       setError("")
       setLoading(true)
       const user = await login(emailRef.current.value, passwordRef.current.value);
-      console.log("1", user);
-      console.log(currentUser);
       history.push("/")
     } catch {
       setError("Failed to log in")
