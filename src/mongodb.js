@@ -71,12 +71,33 @@ app.get("/my-books", async function(request, result) {
   result.send(await books);
 })
 
+/*
+    "title": "",
+    "image": "",
+    "category": "poetry / article / novel / story",
+    "author": "",
+    "pageCount": "",
+    "language": "",
+    "description": "",
+    "tags": "",
+    "userId": "",
+    "pdf": ""
+*/
+
 app.post("/add-book", uploadFiles, async function(request, result) {
   console.log("---------------------------------------------------");
   console.log(request.body);
-  console.log(request.files);
-  console.log(request.file);
+  // console.log(request.files);
+  // console.log(request.file);
+  // insert
 
+  let obj = {
+    "title": request.body.title,
+    "category": request.body.category,
+    "author": request.body.author
+  }
+
+  //const books = client.db("BookLand").collection("books").find(query).toArray();
   uploadFiles(request, result, function (err) {
     if (err instanceof multer.MulterError) {
       return result.status(500).json(err);

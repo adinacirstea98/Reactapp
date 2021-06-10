@@ -53,14 +53,6 @@ function Navbar() {
                 Books
               </Link>
             </li>
-            <li className='nav-item'>
-              <Link to='/products'
-                className='nav-links'
-                onClick={closeMobileMenu}
-              >
-                Prod
-              </Link>
-            </li>
             {
               currentUser ? (
                 <>
