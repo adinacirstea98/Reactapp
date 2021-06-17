@@ -9,8 +9,8 @@ import {
   Spinner
 } from 'reactstrap';
 
-import { useHistory } from "react-router-dom";
-import { ToastContainer, toast } from 'react-toastify';
+import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import axios from 'axios';
 import { useAuth } from "../../contexts/AuthContext";
@@ -21,15 +21,10 @@ function MyBooks() {
   // States
   const [loading, setLoading] = useState(false);
   const [cards, setCards] = useState([]);
-  const history = useHistory();
   const { currentUser } = useAuth();
   const { uid } = currentUser;
 
-  function handleClick() {
-    history.push("/add-book");
-  }
-
-  // Handle Search
+  // Handle Loading
   useEffect(() => {
     setLoading(true);
     axios({
@@ -41,18 +36,36 @@ function MyBooks() {
       }
     })
     .then(res => {
-        const { data } = res;
-        setCards(data);
-        toast("books loaded");
+      const { data } = res;
+      setCards(data);
     })
     .catch(err => {
-        console.error(err.response);
-        toast("books failed");
+      toast.error("Something went wrong on loading your books");
     })
     .finally(() => {
-        setLoading(false);
+      setLoading(false);
     });
   }, [uid]);
+
+  const handleDelete = (id) => {
+    axios({
+      method: "delete",
+      url: "http://localhost:8080/delete-book/" + id,
+    })
+    .then(res => {
+      const cardIndex = cards.findIndex(card => card._id === id);
+      if (cardIndex >= 0) {
+        const cardTitle = cards[cardIndex].title;
+        const newCards = [...cards];
+        newCards.splice(cardIndex, 1);
+        toast(`Book ${cardTitle} has been deleted`);
+        setCards(newCards);
+      }
+    })
+    .catch(err => {
+      toast.error(err.response);
+    })
+  };
 
   const handleCards = () => {
     if (loading) {
@@ -62,7 +75,7 @@ function MyBooks() {
         </div>
       );
     } else {
-      const items = cards.map((item, i) => {
+      const items = cards.map((item) => {
         return (
           <div className='col-lg-4 mb-3' key={item._id}>
             <BookCard
@@ -76,6 +89,7 @@ function MyBooks() {
               description={item.description}
               previewLink={item.pdfPath}
               // infoLink={item.volumeInfo.infoLink}
+              handleDelete={handleDelete.bind(null, item._id)}
             />
           </div>
         );
@@ -92,9 +106,10 @@ function MyBooks() {
     <div className='w-100 h-100' style={{ 
       backgroundImage: `url(/image.jpg)` 
     }}>
-        <Button onClick = {handleClick}> Add book </Button>
-        {handleCards()}
-        <ToastContainer />
+      <Link to='/add-book'>
+        <Button>Add book</Button>
+      </Link>
+      {handleCards()}
     </div>
   );
 }

@@ -4,6 +4,7 @@ import axios from 'axios';
 import styled, { createGlobalStyle, css } from 'styled-components';
 import { useAuth } from "../../contexts/AuthContext";
 import { Link, useHistory } from "react-router-dom"
+import { toast } from "react-toastify";
 
 
 const GlobalStyle = createGlobalStyle`
@@ -76,37 +77,37 @@ function AddBook() {
     const history = useHistory();
     const { currentUser } = useAuth();
     const { uid } = currentUser;
+
     const handleSubmit = (event) => {
-        event.preventDefault();
-        const { target } = event;
-        const formData = new FormData();
-        formData.append("userId", uid);
-        for (let el of target) {
-          if (el.name) {
-            if (el.files) {
-              formData.append(el.name, el.files[0]);
-            } else {
-              formData.append(el.name, el.value);
-            }
+      event.preventDefault();
+      setLoading(true);
+      const { target } = event;
+      const formData = new FormData();
+      formData.append("userId", uid);
+      for (let el of target) {
+        if (el.name) {
+          if (el.files) {
+            formData.append(el.name, el.files[0]);
+          } else {
+            formData.append(el.name, el.value);
           }
         }
-        setLoading(true);
-        axios({
-            method: "post",
-            url: "http://localhost:8080/add-book",
-            headers: {'Content-Type': 'multipart/form-data'},
-            data: formData
-          })
-          .then(res => {
-              const { data } = res;
-          })
-          .catch(err => {
-              console.error(err.response);
-          })
-          .finally(() => {
-              setLoading(false);
-          });
+      }
+      axios({
+          method: "post",
+          url: "http://localhost:8080/add-book",
+          headers: {'Content-Type': 'multipart/form-data'},
+          data: formData
+        })
+        .then(res => {
+          const { data } = res;
+          toast(`Book ${data[0].title} has been added successfully`);
           history.push("/my-books");
+        })
+        .catch(err => {
+          toast.error(err.response);
+          setLoading(false);
+        })
     }
 
     return (
@@ -156,8 +157,8 @@ function AddBook() {
                         <Label for="pdf">PDF</Label>
                         <Input type="file" name="pdf" id="pdf" />
                     </StyledFieldset>
-                    <StyledButton >Submit</StyledButton >
-                </StyledForm >
+                    <StyledButton disabled={loading}>Submit</StyledButton>
+                </StyledForm>
             </StyledFormWrapper>
         </>
     )

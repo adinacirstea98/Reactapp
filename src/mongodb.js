@@ -68,8 +68,12 @@ const server = app.listen(PORT, () => {
 // Create endpoints/route handlers
 app.get("/my-books", async function(request, result) {
   const query = { userId: request.query.uid };
-  const books = client.db("BookLand").collection("books").find(query).toArray();
-  result.send(await books);
+  try {
+    const books = client.db("BookLand").collection("books").find(query).toArray();
+    result.send(await books);
+  } catch (err) {
+    result.send(err);
+  }
 })
 
 /*

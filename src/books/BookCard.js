@@ -1,11 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Card, CardTitle, CardImg, CardBody, CardText, Button, Modal } from 'reactstrap';
+import { Card, CardTitle, CardImg, CardBody, Button, Modal } from 'reactstrap';
 import { BsTrash } from 'react-icons/bs';
 import IconButton from '@material-ui/core/IconButton';
-import { MDBMask, MDBView, MDBContainer, MDBRow, MDBCol } from "mdbreact";
-// import "./Card.css";
-// import "../components/Cards.css";
 
 const BookCard = ({
   id,
@@ -17,24 +14,12 @@ const BookCard = ({
   author,
   publisher,
   previewLink,
-  infoLink
+  infoLink,
+  handleDelete
 }) => {
   // States
   const [modal, setModal] = useState(false);
   const handleToggleModal = () => setModal(!modal);
-  const handleDelete = () => {
-    // axios({
-    //   method: "delete",
-    //   url: "http://localhost:8080/delete-book/" + id,
-    // })
-    // .then(res => {
-    //     const { data } = res;
-    //     window.location.reload();
-    // })
-    // .catch(err => {
-    //     console.error(err.response);
-    // })
-  };
 
   return (
     <Card body style={{ borderColor: '#333', width: '300px' }} className='card text-center'>
@@ -51,7 +36,6 @@ const BookCard = ({
       
       <CardBody>
         <Button onClick={handleToggleModal}>More info</Button>
-        {/* <Button onClick={handleDelete}>Delete</Button> */}
         <IconButton aria-label="delete" onClick={handleDelete}>
           <BsTrash />
         </IconButton>
