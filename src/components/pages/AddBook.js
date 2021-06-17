@@ -100,8 +100,8 @@ function AddBook() {
           data: formData
         })
         .then(res => {
-          const { data } = res;
-          toast(`Book ${data[0].title} has been added successfully`);
+          const { data = {} } = res;
+          toast(`Book ${data.title} has been added successfully`);
           history.push("/my-books");
         })
         .catch(err => {
@@ -133,7 +133,7 @@ function AddBook() {
                             <option value="article">Article</option>
                             <option value="novel">Novel</option>
                             <option value="story">Story</option>
-                            <option value="story">News</option>
+                            <option value="news">News</option>
                         </Input>
                     </FormGroup>
                     <FormGroup>

@@ -15,6 +15,7 @@ const BookCard = ({
   publisher,
   previewLink,
   infoLink,
+  handleEdit,
   handleDelete
 }) => {
   // States
@@ -36,6 +37,7 @@ const BookCard = ({
       
       <CardBody>
         <Button onClick={handleToggleModal}>More info</Button>
+        <Button onClick={handleEdit}>Edit</Button>
         <IconButton aria-label="delete" onClick={handleDelete}>
           <BsTrash />
         </IconButton>

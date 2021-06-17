@@ -7,15 +7,6 @@ const multer = require('multer')
 // Import the library:
 const cors = require('cors');
 
-// const storageImages = multer.diskStorage({
-//   destination: function (req, file, cb) {
-//     cb(null, 'uploads/images/')
-//   },
-//   filename: function (req, file, cb) {
-//     cb(null, Date.now() + '-' + file.originalname )
-//   }
-// })
-
 const storageFiles = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, 'public/uploads/')
@@ -45,9 +36,6 @@ app.use(express.json());
 // for parsing application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true })); 
 
-// for parsing multipart/form-data
-// app.use(uploadFiles);
-
 // Connection URL
 const url = 'mongodb://localhost:27017/?readPreference=primary&appname=MongoDB%20Compass&ssl=false';
 const PORT = process.env.PORT || 8080;
@@ -58,10 +46,6 @@ const server = app.listen(PORT, () => {
   MongoClient.connect(url, {useUnifiedTopology: true}, function(err, res) {
     assert.equal(null, err);
     client = res;
-    // const collection = db.collection("books");
-    // const booksIterator = collection.find({});
-    // booksIterator.forEach(console.log);
-    // client.close();
   });
 });
 
@@ -69,25 +53,12 @@ const server = app.listen(PORT, () => {
 app.get("/my-books", async function(request, result) {
   const query = { userId: request.query.uid };
   try {
-    const books = client.db("BookLand").collection("books").find(query).toArray();
-    result.send(await books);
-  } catch (err) {
-    result.send(err);
+    const books = await client.db("BookLand").collection("books").find(query).toArray();
+    return result.status(200).send(books);
+  } catch (error) {
+    return result.status(500).json(error);
   }
 })
-
-/*
-    "title": "",
-    "image": "",
-    "category": "poetry / article / novel / story",
-    "author": "",
-    "pageCount": "",
-    "language": "",
-    "description": "",
-    "tags": "",
-    "userId": "",
-    "pdf": ""
-*/
 
 app.post("/add-book", uploadFiles, async function(request, result) {
   const data = request.body || {};
@@ -107,8 +78,35 @@ app.post("/add-book", uploadFiles, async function(request, result) {
     const pdfPath = (pdf[0].destination || "").replace("public/", "") + (pdf[0].filename || "");
     const bookObj = { ...data, imagePath, pdfPath };
     try {
-      const writeResult = await client.db("BookLand").collection("books").insertOne(bookObj);
-      return result.status(200).send(writeResult.ops);
+      await client.db("BookLand").collection("books").insertOne(bookObj);
+      return result.status(200).send(bookObj);
+    } catch (error) {
+      return result.status(500).json(error);
+    }
+  });
+});
+
+app.patch("/edit-book/:id", uploadFiles, async function(request, result) {
+  const data = request.body || {};
+  const { image = [{}], pdf = [{}] } = request.files || {};
+  const query = { _id: ObjectID(request.params.id) }
+
+  uploadFiles(request, result, async function (err) {
+    if (err instanceof multer.MulterError) {
+      return result.status(500).json(err);
+    } else if (err) {
+      return result.status(500).json(err);
+    }
+
+    delete data["image"];
+    delete data["pdf"];
+
+    const imagePath = (image[0].destination || "").replace("public/", "") + (image[0].filename || "");
+    const pdfPath = (pdf[0].destination || "").replace("public/", "") + (pdf[0].filename || "");
+    const bookObj = Object.assign(data, imagePath && {imagePath}, pdfPath && {pdfPath});
+    try {
+      await client.db("BookLand").collection("books").updateOne(query, {$set: bookObj});
+      return result.status(200).send(bookObj);
     } catch (error) {
       return result.status(500).json(error);
     }
@@ -116,11 +114,9 @@ app.post("/add-book", uploadFiles, async function(request, result) {
 });
 
 app.delete("/delete-book/:id", async function(request, result) {
-  console.log(request.params);
+  const query = { _id: ObjectID(request.params.id) }
   try {
-    const query = { _id: ObjectID(request.params.id) }
-    const writeResult = await client.db("BookLand").collection("books").remove(query);
-    console.log(result);
+    await client.db("BookLand").collection("books").remove(query);
     return result.status(200).send({id: request.params.id});
   } catch (error) {
     return result.status(500).json(error);

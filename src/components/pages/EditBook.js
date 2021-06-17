@@ -1,0 +1,190 @@
+import React, { useState } from "react"
+import { Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
+import axios from 'axios';
+import styled, { createGlobalStyle, css } from 'styled-components';
+import { useAuth } from "../../contexts/AuthContext";
+import { Link, useHistory } from "react-router-dom"
+import { toast } from "react-toastify";
+
+
+const GlobalStyle = createGlobalStyle`
+  html {
+    height: 100%
+  }
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: linear-gradient(to bottom, #021B79);
+    height: 100%;
+    margin: 0;
+    color: #000000;
+  }
+`;
+
+const StyledFormWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  padding: 0 20px;
+`;
+
+const StyledForm = styled.form`
+  width: 100%;
+  max-width: 700px;
+  padding: 40px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-sizing: border-box;
+  box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.2);
+`;
+
+const StyledButton = styled.button`
+  display: block;
+  background-color: #fff;
+  color: #00000;
+  font-size: 0.9rem;
+  border: 2px solid gray;
+  border-radius: 5px;
+  height: 40px;
+  padding: 0 20px;
+  cursor: pointer;
+  box-sizing: border-box;
+  margin: 0;
+  position: absolute;
+  top: 113%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+`;
+
+const StyledFieldset = styled.fieldset`
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 10px;
+  margin: 20px 0;
+  legend {
+    padding: 0 10px;
+  }
+  label {
+    padding-right: 20px;
+  }
+  input {
+    margin-right: 10px;
+  }
+`;
+
+function EditBook({
+  _id = "",
+  title = "",
+  author = "",
+  category = "",
+  language = "",
+  description = "",
+  imagePath = "",
+  pdfPath = ""
+}) {
+  console.log(_id,
+    title,
+    author,
+    category,
+    language,
+    description,
+    imagePath,
+    pdfPath);
+    const [loading, setLoading] = useState(false);
+    const history = useHistory();
+    const { currentUser } = useAuth();
+    const { uid } = currentUser;
+    const [prefixImage, ...rawImageName] = imagePath.split("-");
+    const [prefixPdf, ...rawPdfName] = pdfPath.split("-");
+    const imageName = rawImageName.join("");
+    const pdfName = rawPdfName.join("");
+
+    const handleSubmit = (event) => {
+      event.preventDefault();
+      setLoading(true);
+      const { target } = event;
+      const formData = new FormData();
+      formData.append("userId", uid);
+      for (let el of target) {
+        if (el.name) {
+          if (el.files) {
+            formData.append(el.name, el.files[0]);
+          } else {
+            formData.append(el.name, el.value);
+          }
+        }
+      }
+      axios({
+          method: "patch",
+          url: "http://localhost:8080/edit-book/" + _id,
+          headers: {'Content-Type': 'multipart/form-data'},
+          data: formData
+        })
+        .then(res => {
+          const { data = {} } = res;
+          console.log(data);
+          toast(`Book ${data.title} has been modified successfully`);
+          history.push("/my-books");
+        })
+        .catch(err => {
+          console.log(err);
+          toast.error(err.response);
+          setLoading(false);
+        })
+    }
+
+    return (
+        <>
+            <GlobalStyle />
+            <StyledFormWrapper>
+                <StyledForm onSubmit={handleSubmit}>
+                    <div>
+                        <h1>Edit content here:</h1>
+                    </div>
+                    <FormGroup>
+                        <Label for="title">Title</Label>
+                        <Input type="text" name="title" id="title" placeholder="book title" defaultValue={title} />
+                    </FormGroup>
+                    <FormGroup>
+                        <Label for="author">Author</Label>
+                        <Input type="text" name="author" id="author" placeholder="book author" defaultValue={author} />
+                    </FormGroup>
+                    <FormGroup>
+                        <Label for="category">Category</Label>
+                        <Input type="select" name="category" id="category" defaultValue={category}>
+                            <option value="poetry">Poetry</option>
+                            <option value="article">Article</option>
+                            <option value="novel">Novel</option>
+                            <option value="story">Story</option>
+                            <option value="news">News</option>
+                        </Input>
+                    </FormGroup>
+                    <FormGroup>
+                        <Label for="language">Language</Label>
+                        <Input type="select" name="language" id="language" defaultValue={language}>
+                            <option value="english">English</option>
+                            <option value="french">French</option>
+                            <option value="german">German</option>
+                            <option value="romanian">Romanian</option>
+                        </Input>
+                    </FormGroup>
+                    <FormGroup>
+                        <Label for="description">Description</Label>
+                        <Input type="textarea" name="description" id="description" defaultValue={description} />
+                    </FormGroup>
+                    <StyledFieldset>
+                        <Label for="image">Image{imageName && ` (${imageName})`}</Label>
+                        <Input type="file" name="image" id="image"/>
+                    </StyledFieldset>
+                    <StyledFieldset>
+                        <Label for="pdf">PDF{pdfName && ` (${pdfName})`}</Label>
+                        <Input type="file" name="pdf" id="pdf"/>
+                    </StyledFieldset>
+                    <StyledButton disabled={loading}>Submit</StyledButton>
+                </StyledForm>
+            </StyledFormWrapper>
+        </>
+    )
+}
+
+export default EditBook;

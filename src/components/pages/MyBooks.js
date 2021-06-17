@@ -9,7 +9,7 @@ import {
   Spinner
 } from 'reactstrap';
 
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import axios from 'axios';
@@ -22,6 +22,7 @@ function MyBooks() {
   const [loading, setLoading] = useState(false);
   const [cards, setCards] = useState([]);
   const { currentUser } = useAuth();
+  const history = useHistory();
   const { uid } = currentUser;
 
   // Handle Loading
@@ -46,6 +47,12 @@ function MyBooks() {
       setLoading(false);
     });
   }, [uid]);
+
+  const handleEdit = (id) => {
+    console.log(id, cards[id]);
+    const card = cards.find(({ _id }) => _id === id);
+    history.push({pathname: "/edit-book", state: card});
+  };
 
   const handleDelete = (id) => {
     axios({
@@ -89,6 +96,7 @@ function MyBooks() {
               description={item.description}
               previewLink={item.pdfPath}
               // infoLink={item.volumeInfo.infoLink}
+              handleEdit={handleEdit.bind(null, item._id)}
               handleDelete={handleDelete.bind(null, item._id)}
             />
           </div>
