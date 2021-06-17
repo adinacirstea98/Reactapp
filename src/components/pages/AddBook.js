@@ -3,6 +3,8 @@ import { Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
 import axios from 'axios';
 import styled, { createGlobalStyle, css } from 'styled-components';
 import { useAuth } from "../../contexts/AuthContext";
+import { Link, useHistory } from "react-router-dom"
+
 
 const GlobalStyle = createGlobalStyle`
   html {
@@ -48,7 +50,7 @@ const StyledButton = styled.button`
   box-sizing: border-box;
   margin: 0;
   position: absolute;
-  top: 107%;
+  top: 113%;
   left: 50%;
   transform: translate(-50%, -50%);
 `;
@@ -69,23 +71,9 @@ const StyledFieldset = styled.fieldset`
   }
 `;
 
-/* 
-  {
-    "title": "",
-    "image": "",
-    "category": "poetry / article / novel / story",
-    "author": "",
-    "pageCount": "",
-    "language": "",
-    "description": "",
-    "tags": "",
-    "userId": "",
-    "pdf": ""
-  }
-*/
-
 function AddBook() {
     const [loading, setLoading] = useState(false);
+    const history = useHistory();
     const { currentUser } = useAuth();
     const { uid } = currentUser;
     const handleSubmit = (event) => {
@@ -118,6 +106,7 @@ function AddBook() {
           .finally(() => {
               setLoading(false);
           });
+          history.push("/my-books");
     }
 
     return (
@@ -143,6 +132,7 @@ function AddBook() {
                             <option value="article">Article</option>
                             <option value="novel">Novel</option>
                             <option value="story">Story</option>
+                            <option value="story">News</option>
                         </Input>
                     </FormGroup>
                     <FormGroup>

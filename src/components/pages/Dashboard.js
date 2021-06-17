@@ -26,47 +26,22 @@ function Books() {
   // Handle Search
   const handleSubmit = () => {
     setLoading(true);
-    if (maxResults > 51 || maxResults < 1) {
-      toast.error('max results must be between 1 and 40');
-    } else {
-      // axios
-      //   .get(
-      //     `https://www.googleapis.com/books/v1/volumes?q=${query}&maxResults=${maxResults}&startIndex=${startIndex}`
-      //   )
-      //   .then(res => {
-      //     if (startIndex >= res.data.totalItems || startIndex < 1) {
-      //       toast.error(
-      //         `max reults must be between 1 and ${res.data.totalItems}`
-      //       );
-      //     } else {
-      //       if (res.data.items.length > 0) {
-      //         setCards(res.data.items);
-      //         setLoading(false);
-      //       }
-      //     }
-      //   })
-      //   .catch(err => {
-      //     setLoading(true);
-      //     console.log(err.response);
-      //   });
+    axios({
+        method: "get",
+        url: "http://localhost:8080",
+        headers: {'Content-Type': "application/json" }
 
-      axios({
-          method: "get",
-          url: "http://localhost:8080",
-          headers: {'Content-Type': "application/json" }
-
-        })
-        .then(res => {
-          const { data } = res;
-          setCards(data);
-        })
-        .catch(err => {
-          console.error(err.response);
-        })
-        .finally(() => {
-          setLoading(false);
-        });
-    }
+      })
+      .then(res => {
+        const { data } = res;
+        setCards(data);
+      })
+      .catch(err => {
+        console.error(err.response);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
   // Main Show Case
   const mainHeader = () => {
@@ -140,7 +115,6 @@ function Books() {
     <div className='w-100 h-100'>
       {mainHeader()}
       {handleCards()}
-      <ToastContainer />
     </div>
   );
 }

@@ -78,3 +78,7 @@ body {
   white-space: nowrap;
   text-overflow: ellipsis;
 }
+
+div.toastify {
+  z-index: 10;
+}

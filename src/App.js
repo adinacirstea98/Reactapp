@@ -2,6 +2,7 @@ import React from 'react';
 import Navbar from './components/Navbar';
 import './App.css';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
 import Services from './components/pages/Services';
 import Products from './components/pages/Products';
 import { AuthProvider } from "./contexts/AuthContext";
@@ -25,6 +26,7 @@ function App() {
             <PrivateRoute path="/add-book" component={AddBook} />
             <AuthenticationRoutes/>
           </Switch>
+          <ToastContainer />
         </Router>
       </AuthProvider>
     </>

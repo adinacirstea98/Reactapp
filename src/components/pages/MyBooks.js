@@ -89,7 +89,9 @@ function MyBooks() {
   };
   
   return (
-    <div className='w-100 h-100'>
+    <div className='w-100 h-100' style={{ 
+      backgroundImage: `url(/image.jpg)` 
+    }}>
         <Button onClick = {handleClick}> Add book </Button>
         {handleCards()}
         <ToastContainer />

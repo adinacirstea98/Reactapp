@@ -1,6 +1,11 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Card, CardTitle, CardImg, CardBody, Button, Modal } from 'reactstrap';
+import { Card, CardTitle, CardImg, CardBody, CardText, Button, Modal } from 'reactstrap';
+import { BsTrash } from 'react-icons/bs';
+import IconButton from '@material-ui/core/IconButton';
+import { MDBMask, MDBView, MDBContainer, MDBRow, MDBCol } from "mdbreact";
+// import "./Card.css";
+// import "../components/Cards.css";
 
 const BookCard = ({
   id,
@@ -18,30 +23,38 @@ const BookCard = ({
   const [modal, setModal] = useState(false);
   const handleToggleModal = () => setModal(!modal);
   const handleDelete = () => {
-    axios({
-      method: "delete",
-      url: "http://localhost:8080/delete-book/" + id,
-    })
-    .then(res => {
-        const { data } = res;
-    })
-    .catch(err => {
-        console.error(err.response);
-    })
+    // axios({
+    //   method: "delete",
+    //   url: "http://localhost:8080/delete-book/" + id,
+    // })
+    // .then(res => {
+    //     const { data } = res;
+    //     window.location.reload();
+    // })
+    // .catch(err => {
+    //     console.error(err.response);
+    // })
   };
 
   return (
-    <Card style={{ width: '233px' }} className='m-auto'>
+    <Card body style={{ borderColor: '#333', width: '300px' }} className='card text-center'>
+      <CardBody>
+        <CardTitle className="text-center" >{title}</CardTitle>
+      </CardBody>
       <CardImg
         top
         style={{ width: '100%', height: '233px' }}
         src={thumbnail}
         alt={title}
-      />
+        desc={description}>
+      </CardImg>
+      
       <CardBody>
-        <CardTitle className='card-title'>{title}</CardTitle>
         <Button onClick={handleToggleModal}>More info</Button>
-        <Button onClick={handleDelete}>Delete</Button>
+        {/* <Button onClick={handleDelete}>Delete</Button> */}
+        <IconButton aria-label="delete" onClick={handleDelete}>
+          <BsTrash />
+        </IconButton>
       </CardBody>
       <Modal isOpen={modal} toggle={handleToggleModal}>
         <div className='modal-header d-flex justify-content-center'>
@@ -59,7 +72,7 @@ const BookCard = ({
         </div>
         <div className='modal-body'>
           <div className='d-flex justify-content-between ml-3'>
-            <img src={thumbnail} alt={title} style={{ height: '233px' }} />
+            <img src={thumbnail} alt={title} style={{ height: '200px' }} />
             <div>
               <p>Page Count: {pageCount}</p>
               <p>Language : {language}</p>
@@ -98,6 +111,7 @@ const BookCard = ({
         </div>
       </Modal>
     </Card>
+    
   );
 };
 
