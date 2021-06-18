@@ -27,7 +27,7 @@ function App() {
           <PrivateRoute path="/edit-book" component={EditBook} />
           <AuthenticationRoutes/>
         </Switch>
-        <ToastContainer />
+        <ToastContainer/>
       </AuthProvider>
     </>
   );

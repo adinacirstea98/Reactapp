@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Card, CardTitle, CardImg, CardBody, Button, Modal } from 'reactstrap';
-import { BsTrash } from 'react-icons/bs';
-import IconButton from '@material-ui/core/IconButton';
+import { Card, CardTitle, CardImg, CardBody, Modal, ButtonGroup } from 'reactstrap';
+import Button from "react-bootstrap/Button";
+import "../App.css"
 
 const BookCard = ({
   id,
@@ -25,7 +25,8 @@ const BookCard = ({
   return (
     <Card body style={{ borderColor: '#333', width: '300px' }} className='card text-center'>
       <CardBody>
-        <CardTitle className="text-center" >{title}</CardTitle>
+        <CardTitle className="text-center" >{title}
+        </CardTitle>
       </CardBody>
       <CardImg
         top
@@ -34,14 +35,14 @@ const BookCard = ({
         alt={title}
         desc={description}>
       </CardImg>
-      
       <CardBody>
-        <Button onClick={handleToggleModal}>More info</Button>
-        <Button onClick={handleEdit}>Edit</Button>
-        <IconButton aria-label="delete" onClick={handleDelete}>
-          <BsTrash />
-        </IconButton>
+        <ButtonGroup>
+          <Button variant="outlined" onClick={handleToggleModal} style={{borderWidth: 1, borderColor: 'black'}}>More info</Button>
+          <Button variant="outlined" style={{borderWidth: 1, borderColor: 'black'}} onClick={handleEdit}>Edit</Button>
+          <Button variant="outlined" style={{borderWidth: 1, borderColor: 'black'}} onClick={handleDelete}>Delete</Button>
+        </ButtonGroup>
       </CardBody>
+
       <Modal isOpen={modal} toggle={handleToggleModal}>
         <div className='modal-header d-flex justify-content-center'>
           <h5 className='modal-title text-center' id='exampleModalLabel'>
@@ -57,19 +58,18 @@ const BookCard = ({
           </button>
         </div>
         <div className='modal-body'>
-          <div className='d-flex justify-content-between ml-3'>
+          <div className='d-flex'>
             <img src={thumbnail} alt={title} style={{ height: '200px' }} />
             <div>
-              <p>Page Count: {pageCount}</p>
+              <p className="textbold">Page Count: {pageCount}</p>
               <p>Language : {language}</p>
               <p>Author : {author}</p>
-              <p>Publisher : {publisher}</p>
             </div>
           </div>
           <div className='mt-3'>{description}</div>
         </div>
         <div className='modal-footer'>
-          <div className='left-silde'>
+          <div>
             <a
               href={previewLink}
               className='btn-link'
@@ -79,19 +79,6 @@ const BookCard = ({
               rel='noopener noreferrer'
             >
               Preview Link
-            </a>
-          </div>
-          <div className='divider'></div>
-          <div className='right-silde'>
-            <a
-              href={infoLink}
-              className='btn-link'
-              color='default'
-              type='button'
-              target='_blank'
-              rel='noopener noreferrer'
-            >
-              Info Link
             </a>
           </div>
         </div>

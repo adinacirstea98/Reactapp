@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
+import { Button, Form, FormGroup, Label, Input, FormText, ButtonGroup } from 'reactstrap';
 import axios from 'axios';
 import styled, { createGlobalStyle, css } from 'styled-components';
 import { useAuth } from "../../contexts/AuthContext";
@@ -133,12 +133,16 @@ function EditBook({
         })
     }
 
+    const handleCancel = (event) => {
+      history.push("/my-books");
+    }
+
     return (
         <>
             <GlobalStyle />
             <StyledFormWrapper>
                 <StyledForm onSubmit={handleSubmit}>
-                    <div>
+                    <div style={{marginTop:60}}>
                         <h1>Edit content here:</h1>
                     </div>
                     <FormGroup>
@@ -180,7 +184,10 @@ function EditBook({
                         <Label for="pdf">PDF{pdfName && ` (${pdfName})`}</Label>
                         <Input type="file" name="pdf" id="pdf"/>
                     </StyledFieldset>
-                    <StyledButton disabled={loading}>Submit</StyledButton>
+                    <ButtonGroup style={{marginLeft:220}}>
+                      <Button style={{backgroundColor: 'white', color: 'black', borderWidth: 1, borderColor: 'black'}} disabled={loading}>Submit</Button>
+                      <Button onClick={handleCancel} style={{backgroundColor: 'white', color: 'black', borderWidth: 1, borderColor: 'black'}}>Cancel</Button>
+                    </ButtonGroup>
                 </StyledForm>
             </StyledFormWrapper>
         </>

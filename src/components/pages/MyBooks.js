@@ -3,7 +3,6 @@ import {
   InputGroup,
   Input,
   InputGroupAddon,
-  Button,
   FormGroup,
   Label,
   Spinner
@@ -11,11 +10,11 @@ import {
 
 import { Link, useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.min.css';
 import axios from 'axios';
 import { useAuth } from "../../contexts/AuthContext";
 import BookCard from '../../books/BookCard';
 import '../../App.css';
+import Button from "react-bootstrap/Button";
 
 function MyBooks() {
   // States
@@ -111,13 +110,14 @@ function MyBooks() {
   };
   
   return (
-    <div className='w-100 h-100' style={{ 
-      backgroundImage: `url(/image.jpg)` 
-    }}>
+    <div className='background-img' >
+      <p className='cls'>My books</p>
       <Link to='/add-book'>
-        <Button>Add book</Button>
+        <Button variant="light" style={{ marginLeft: 690 }}>Add a new book</Button>
       </Link>
-      {handleCards()}
+      <div>
+        {handleCards()}
+      </div>
     </div>
   );
 }

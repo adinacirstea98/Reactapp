@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
+import { Button, Form, FormGroup, Label, Input, FormText, ButtonGroup } from 'reactstrap';
 import axios from 'axios';
 import styled, { createGlobalStyle, css } from 'styled-components';
 import { useAuth } from "../../contexts/AuthContext";
@@ -110,12 +110,16 @@ function AddBook() {
         })
     }
 
+    const handleCancel = (event) => {
+      history.push("/my-books");
+    }
+
     return (
         <>
             <GlobalStyle />
             <StyledFormWrapper>
                 <StyledForm onSubmit={handleSubmit}>
-                    <div>
+                    <div style={{marginTop:60}}>
                         <h1>Add content here:</h1>
                     </div>
                     <FormGroup>
@@ -127,14 +131,14 @@ function AddBook() {
                         <Input type="text" name="author" id="author" placeholder="book author" />
                     </FormGroup>
                     <FormGroup>
-                        <Label for="category">Category</Label>
-                        <Input type="select" name="category" id="category">
-                            <option value="poetry">Poetry</option>
-                            <option value="article">Article</option>
-                            <option value="novel">Novel</option>
-                            <option value="story">Story</option>
-                            <option value="news">News</option>
-                        </Input>
+                      <Label for="category">Category</Label>
+                      <Input type="select" name="category" id="category">
+                          <option value="poetry">Poetry</option>
+                          <option value="article">Article</option>
+                          <option value="novel">Novel</option>
+                          <option value="story">Story</option>
+                          <option value="news">News</option>
+                      </Input>
                     </FormGroup>
                     <FormGroup>
                         <Label for="language">Language</Label>
@@ -157,7 +161,10 @@ function AddBook() {
                         <Label for="pdf">PDF</Label>
                         <Input type="file" name="pdf" id="pdf" />
                     </StyledFieldset>
-                    <StyledButton disabled={loading}>Submit</StyledButton>
+                    <ButtonGroup style={{marginLeft:220}}>
+                      <Button style={{backgroundColor: 'white', color: 'black', borderWidth: 1, borderColor: 'black'}} disabled={loading}>Submit</Button>
+                      <Button onClick={handleCancel} style={{backgroundColor: 'white', color: 'black', borderWidth: 1, borderColor: 'black'}}>Cancel</Button>
+                    </ButtonGroup>
                 </StyledForm>
             </StyledFormWrapper>
         </>

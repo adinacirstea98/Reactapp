@@ -9,6 +9,7 @@ import {
   Spinner
 } from 'reactstrap';
 import { ToastContainer, toast } from 'react-toastify';
+import { ButtonGroup } from 'reactstrap';
 import 'react-toastify/dist/ReactToastify.min.css';
 import axios from 'axios';
 
@@ -47,27 +48,28 @@ function Books() {
   const mainHeader = () => {
     return (
       <div className='main-image d-flex justify-content-center align-items-center flex-column'>
-        {/* Overlay */}
         <div className='filter'></div>
-        <h1
-          className='display-2 text-center text-white mb-3'
-          style={{ zIndex: 2 }}
-        >
-          Google Books
+        <h1 className='display-2 text-center text-white mb-3' style={{ zIndex: 2 }}>
+          Find a book!
         </h1>
         <div style={{ width: '60%', zIndex: 2 }}>
+          {/* <ButtonGroup style={{marginLeft:275, marginBottom:30}}>
+          <Button variant="outlined" style={{borderWidth: 1, borderColor: 'black'}}>All</Button>
+            <Button variant="outlined" style={{borderWidth: 1, borderColor: 'black'}}>Poetry</Button>
+            <Button variant="outlined" style={{borderWidth: 1, borderColor: 'black'}}>Article</Button>
+            <Button variant="outlined" style={{borderWidth: 1, borderColor: 'black'}}>Novel</Button>
+            <Button variant="outlined" style={{borderWidth: 1, borderColor: 'black'}}>Story</Button>
+            <Button variant="outlined" style={{borderWidth: 1, borderColor: 'black'}}>News</Button>
+          </ButtonGroup> */}
           <InputGroup size='lg' className='mb-3'>
-            <Input
-              placeholder='Book Search'
-              value={query}
-              onChange={e => setQuery(e.target.value)}
-            />
+            <Input placeholder='Book Search' value={query} onChange={e => setQuery(e.target.value)}/>
             <InputGroupAddon addonType='append'>
               <Button color='secondary' onClick={handleSubmit}>
                 <i className='fas fa-search'></i>
               </Button>
             </InputGroupAddon>
           </InputGroup>
+          
         </div>
       </div>
     );
