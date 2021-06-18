@@ -60,6 +60,16 @@ app.get("/my-books", async function(request, result) {
   }
 })
 
+app.get("/all-books", async function(request, result) {
+  const query = {};
+  try {
+    const books = await client.db("BookLand").collection("books").find(query).toArray();
+    return result.status(200).send(books);
+  } catch (error) {
+    return result.status(500).json(error);
+  }
+})
+
 app.post("/add-book", uploadFiles, async function(request, result) {
   const data = request.body || {};
   const { image = [{}], pdf = [{}] } = request.files || {};

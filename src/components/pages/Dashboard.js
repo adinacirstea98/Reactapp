@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   InputGroup,
   Input,
@@ -24,6 +24,25 @@ function Books() {
   const [loading, setLoading] = useState(false);
   const [cards, setCards] = useState([]);
 
+  useEffect(() => {
+    setLoading(true);
+    axios({
+      method: "get",
+      url: "http://localhost:8080/all-books",
+      headers: {'Content-Type': "application/json" },
+    })
+    .then(res => {
+      const { data } = res;
+      setCards(data);
+    })
+    .catch(err => {
+      toast.error("Something went wrong on loading your books");
+    })
+    .finally(() => {
+      setLoading(false);
+    });
+  }, []);
+  
   // Handle Search
   const handleSubmit = () => {
     setLoading(true);
@@ -44,6 +63,15 @@ function Books() {
         setLoading(false);
       });
   };
+
+  const handleFavorite = (id) => {
+    console.log("handleFavorite", id);
+  };
+
+  const handleReview = (id) => {
+    console.log("handleReview", id);
+  };
+
   // Main Show Case
   const mainHeader = () => {
     return (
@@ -84,23 +112,21 @@ function Books() {
       );
     } else {
       const items = cards.map((item, i) => {
-        let thumbnail = '';
-        if (item.volumeInfo.imageLinks) {
-          thumbnail = item.volumeInfo.imageLinks.thumbnail;
-        }
-
         return (
-          <div className='col-lg-4 mb-3' key={item.id}>
+          <div className='col-lg-4 mb-3' key={item._id}>
             <BookCard
-              thumbnail={thumbnail}
-              title={item.volumeInfo.title}
-              pageCount={item.volumeInfo.pageCount}
-              language={item.volumeInfo.language}
-              authors={item.volumeInfo.authors}
-              publisher={item.volumeInfo.publisher}
-              description={item.volumeInfo.description}
-              previewLink={item.volumeInfo.previewLink}
-              infoLink={item.volumeInfo.infoLink}
+              id={item._id}
+              thumbnail={item.imagePath}
+              title={item.title}
+              // pageCount={item.volumeInfo.pageCount}
+              language={item.language}
+              author={item.author}
+              // publisher={item.volumeInfo.publisher}
+              description={item.description}
+              previewLink={item.pdfPath}
+              // infoLink={item.volumeInfo.infoLink}
+              handleFavorite={handleFavorite.bind(null, item._id)}
+              handleReview={handleReview.bind(null, item._id)}
             />
           </div>
         );

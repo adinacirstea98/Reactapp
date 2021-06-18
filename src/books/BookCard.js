@@ -16,7 +16,9 @@ const BookCard = ({
   previewLink,
   infoLink,
   handleEdit,
-  handleDelete
+  handleDelete,
+  handleFavorite,
+  handleReview
 }) => {
   // States
   const [modal, setModal] = useState(false);
@@ -38,8 +40,10 @@ const BookCard = ({
       <CardBody>
         <ButtonGroup>
           <Button variant="outlined" onClick={handleToggleModal} style={{borderWidth: 1, borderColor: 'black'}}>More info</Button>
-          <Button variant="outlined" style={{borderWidth: 1, borderColor: 'black'}} onClick={handleEdit}>Edit</Button>
-          <Button variant="outlined" style={{borderWidth: 1, borderColor: 'black'}} onClick={handleDelete}>Delete</Button>
+          {handleEdit && (<Button variant="outlined" style={{borderWidth: 1, borderColor: 'black'}} onClick={handleEdit}>Edit</Button>)}
+          {handleDelete && (<Button variant="outlined" style={{borderWidth: 1, borderColor: 'black'}} onClick={handleDelete}>Delete</Button>)}
+          {handleFavorite && (<Button variant="outlined" style={{borderWidth: 1, borderColor: 'black'}} onClick={handleFavorite}>Favorite</Button>)}
+          {handleReview && (<Button variant="outlined" style={{borderWidth: 1, borderColor: 'black'}} onClick={handleReview}>Review</Button>)}
         </ButtonGroup>
       </CardBody>
 
