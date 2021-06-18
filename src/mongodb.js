@@ -123,6 +123,18 @@ app.patch("/edit-book/:id", uploadFiles, async function(request, result) {
   });
 });
 
+app.patch("/set-favorite/:id", async function(request, result) {
+  const data = request.body || {};
+  const query = { _id: ObjectID(request.params.id) }
+  console.log(request);
+  try {
+    await client.db("BookLand").collection("books").updateOne(query, {$addToSet: {users: data.user}});
+    return result.status(200).send(data);
+  } catch (error) {
+    return result.status(500).json(error);
+  }
+});
+
 app.delete("/delete-book/:id", async function(request, result) {
   const query = { _id: ObjectID(request.params.id) }
   try {

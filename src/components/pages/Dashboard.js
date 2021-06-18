@@ -10,6 +10,7 @@ import {
 } from 'reactstrap';
 import { ToastContainer, toast } from 'react-toastify';
 import { ButtonGroup } from 'reactstrap';
+import { useAuth } from "../../contexts/AuthContext"
 import 'react-toastify/dist/ReactToastify.min.css';
 import axios from 'axios';
 
@@ -23,6 +24,8 @@ function Books() {
   const [query, setQuery] = useState('');
   const [loading, setLoading] = useState(false);
   const [cards, setCards] = useState([]);
+  const { currentUser } = useAuth()
+  const { uid } = currentUser;
 
   useEffect(() => {
     setLoading(true);
@@ -66,6 +69,23 @@ function Books() {
 
   const handleFavorite = (id) => {
     console.log("handleFavorite", id);
+    axios({
+      method: "patch",
+      url: "http://localhost:8080/set-favorite/" + id,
+      headers: {'Content-Type': "application/json" },
+      data: {
+        user: uid
+      }
+    })
+    .then(res => {
+      const card = cards.find(({ _id }) => _id === id);
+      console.log(card);
+      toast(`Book ${card.title} has been added to favorites successfully`);
+    })
+    .catch(err => {
+      console.log(err);
+      toast.error(err.response);
+    })
   };
 
   const handleReview = (id) => {
