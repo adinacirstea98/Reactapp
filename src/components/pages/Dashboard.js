@@ -78,9 +78,18 @@ function Books() {
       }
     })
     .then(res => {
-      const card = cards.find(({ _id }) => _id === id);
-      console.log(card);
+      const newCards = [...cards];
+      const card = newCards.find(({ _id }) => _id === id);
       toast(`Book ${card.title} has been added to favorites successfully`);
+      const userIndex = (card.users || []).findIndex((userId) => userId === uid);
+      if (!card.users) {
+        card.users = [uid];
+      } else if (userIndex < 0) {
+        card.users.push(uid);
+      } else {
+        card.users.splice(userIndex, 1);
+      }
+      setCards(newCards);
     })
     .catch(err => {
       console.log(err);
@@ -131,7 +140,7 @@ function Books() {
         </div>
       );
     } else {
-      const items = cards.map((item, i) => {
+      const items = cards.map((item) => {
         return (
           <div className='col-lg-4 mb-3' key={item._id}>
             <BookCard
@@ -147,6 +156,7 @@ function Books() {
               // infoLink={item.volumeInfo.infoLink}
               handleFavorite={handleFavorite.bind(null, item._id)}
               handleReview={handleReview.bind(null, item._id)}
+              isFavorite={(item.users || []).includes(uid)}
             />
           </div>
         );

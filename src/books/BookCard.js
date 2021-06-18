@@ -18,7 +18,8 @@ const BookCard = ({
   handleEdit,
   handleDelete,
   handleFavorite,
-  handleReview
+  handleReview,
+  isFavorite
 }) => {
   // States
   const [modal, setModal] = useState(false);
@@ -27,7 +28,7 @@ const BookCard = ({
   return (
     <Card body style={{ borderColor: '#333', width: '300px' }} className='card text-center'>
       <CardBody>
-        <CardTitle className="text-center" >{title}
+        <CardTitle className="text-center" >{isFavorite && `(*)`}{title}
         </CardTitle>
       </CardBody>
       <CardImg

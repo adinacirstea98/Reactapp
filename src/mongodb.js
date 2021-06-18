@@ -127,19 +127,23 @@ app.patch("/set-favorite/:id", async function(request, result) {
   const data = request.body || {};
   const query = { _id: ObjectID(request.params.id) }
   try {
-    // await client.db("BookLand").collection("books").updateOne(query, {$addToSet: {users: data.user}});
-    await client.db("BookLand").collection("books").updateOne(
-      query,
-      [{ $set:
-        { "users":
-          { $cond: [
-            {$in: [data.user, "$users"]},
-            {$setDifference: ["$users", [data.user]]},
-            {$concatArrays: ["$users", [data.user]]}
-          ]}
-        }
-      }]
-    )    
+    const book = await client.db("BookLand").collection("books").findOne(query);
+    if (book.users) {
+      await client.db("BookLand").collection("books").updateOne(
+        query,
+        [{ $set:
+          { "users":
+            { $cond: [
+              {$in: [data.user, "$users"]},
+              {$setDifference: ["$users", [data.user]]},
+              {$concatArrays: ["$users", [data.user]]}
+            ]}
+          }
+        }]
+      ) 
+    } else {
+      await client.db("BookLand").collection("books").updateOne(query, {$set: {users: [data.user]}});
+    }  
     return result.status(200).send(data);
   } catch (error) {
     console.log(error);
