@@ -126,11 +126,23 @@ app.patch("/edit-book/:id", uploadFiles, async function(request, result) {
 app.patch("/set-favorite/:id", async function(request, result) {
   const data = request.body || {};
   const query = { _id: ObjectID(request.params.id) }
-  console.log(request);
   try {
-    await client.db("BookLand").collection("books").updateOne(query, {$addToSet: {users: data.user}});
+    // await client.db("BookLand").collection("books").updateOne(query, {$addToSet: {users: data.user}});
+    await client.db("BookLand").collection("books").updateOne(
+      query,
+      [{ $set:
+        { "users":
+          { $cond: [
+            {$in: [data.user, "$users"]},
+            {$setDifference: ["$users", [data.user]]},
+            {$concatArrays: ["$users", [data.user]]}
+          ]}
+        }
+      }]
+    )    
     return result.status(200).send(data);
   } catch (error) {
+    console.log(error);
     return result.status(500).json(error);
   }
 });
