@@ -11,22 +11,25 @@ import {
 } from 'reactstrap';
 import { ToastContainer, toast } from 'react-toastify';
 import { ButtonGroup } from 'reactstrap';
+import { useHistory } from "react-router-dom"
 import { useAuth } from "../../contexts/AuthContext"
 import 'react-toastify/dist/ReactToastify.min.css';
 import axios from 'axios';
 
 import BookCard from '../../books/BookCard';
+import Review from "./Review";
 import '../../App.css';
 
 function Books() {
   // States
-  var [maxResults, setMaxResults] = useState(40);
   const [startIndex, setStartIndex] = useState(1);
   const [query, setQuery] = useState('');
   const [loading, setLoading] = useState(false);
   const [cards, setCards] = useState([]);
   const { currentUser } = useAuth()
   const { uid } = currentUser;
+  console.log(currentUser);
+  const [openCard, setOpenCard] = useState(null);
 
   const [dropdownOpenLanguage, setOpenLanguage] = useState(false);
   const toggle1 = () => setOpenLanguage(!dropdownOpenLanguage);
@@ -55,7 +58,7 @@ function Books() {
       setLoading(false);
     });
   }, []);
-  
+
   // Handle Search
   const handleSubmit = () => {
     setLoading(true);
@@ -108,7 +111,11 @@ function Books() {
   };
 
   const handleReview = (id) => {
-    console.log("handleReview", id);
+    if (!id) {
+      setOpenCard(null);
+    } else {
+      setOpenCard(cards.find(({ _id }) => _id === id));
+    }
   };
 
   // Main Show Case
@@ -225,6 +232,10 @@ function Books() {
     <div className='w-100 h-100'>
       {mainHeader()}
       {handleCards()}
+      <Review
+        openCard={openCard}
+        handleToggle={handleReview}
+      />
     </div>
   );
 }

@@ -49,7 +49,7 @@ function Navbar() {
               currentUser ? (
                 <>
                   <li className='nav-item'>
-                    <Link to='/services'
+                    <Link to='/favorites-books'
                       className='nav-links'
                       onClick={closeMobileMenu}
                     >

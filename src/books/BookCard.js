@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 import { Card, CardTitle, CardImg, CardBody, Modal, ButtonGroup } from 'reactstrap';
 import Button from "react-bootstrap/Button";
 import Heart from "react-animated-heart";
@@ -40,7 +41,7 @@ const BookCard = ({
         desc={description}>
       </CardImg>
       <CardBody>
-        <ButtonGroup>
+        <ButtonGroup style={{display: "block"}}>
           <Button variant="outlined" onClick={handleToggleModal} style={{borderWidth: 1, borderColor: 'black'}}>More info</Button>
           {handleEdit && (<Button variant="outlined" style={{borderWidth: 1, borderColor: 'black'}} onClick={handleEdit}>Edit</Button>)}
           {handleDelete && (<Button variant="outlined" style={{borderWidth: 1, borderColor: 'black'}} onClick={handleDelete}>Delete</Button>)}

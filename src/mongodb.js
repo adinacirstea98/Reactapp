@@ -70,6 +70,16 @@ app.get("/all-books", async function(request, result) {
   }
 })
 
+app.get("/favorites-books", async function(request, result) {
+  const query = { users: {$in: [request.query.uid]} };
+  try {
+    const books = await client.db("BookLand").collection("books").find(query).toArray();
+    return result.status(200).send(books);
+  } catch (error) {
+    return result.status(500).json(error);
+  }
+})
+
 app.post("/add-book", uploadFiles, async function(request, result) {
   const data = request.body || {};
   const { image = [{}], pdf = [{}] } = request.files || {};
@@ -121,6 +131,32 @@ app.patch("/edit-book/:id", uploadFiles, async function(request, result) {
       return result.status(500).json(error);
     }
   });
+});
+
+app.patch("/rating-book/:id", async function(request, result) {
+  const { rating, comment, userId, email } = request.body || {};
+  const query = { _id: ObjectID(request.params.id) }
+  try {
+    const { rating: currentRating = 0, comments = [] } = await client.db("BookLand").collection("books").findOne(query);
+    const count = comments.length;
+    const newRating = (currentRating * count + rating) / (count + 1);
+    await client.db("BookLand").collection("books").updateOne(query, {
+      $set: {
+        rating: newRating
+      },
+      $push: {
+        comments: {
+          comment, 
+          userId,
+          email
+        }
+      },
+    });
+    return result.status(200).send({});
+  } catch (error) {
+    console.log(error);
+    return result.status(500).json(error);
+  }
 });
 
 app.patch("/set-favorite/:id", async function(request, result) {

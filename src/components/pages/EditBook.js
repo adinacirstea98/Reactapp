@@ -103,6 +103,7 @@ function EditBook({
 
     const handleSubmit = (event) => {
       event.preventDefault();
+      event.stopPropagation();
       setLoading(true);
       const { target } = event;
       const formData = new FormData();
