@@ -20,8 +20,6 @@ function App() {
         <Navbar />
         <Switch>
           <PrivateRoute exact path="/" component={Dashboard} />
-          <Route path='/services' component={Services} />
-          <Route path='/products' component={Products} />
           <PrivateRoute path="/my-books" component={MyBooks} />
           <PrivateRoute path="/add-book" component={AddBook} />
           <PrivateRoute path="/edit-book" component={EditBook} />

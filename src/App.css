@@ -109,11 +109,11 @@ div.toastify {
 }
 
 .shadow1 { 
-  box-shadow: 0 5px 10px rgba(154,160,185,.05), 0 15px 40px rgba(166,173,201,.2);
+  box-shadow: 0 14px 10px rgba(8, 8, 8, 0.05), 0 15px 40px rgba(21, 22, 22, 0.2);
 }
 
 .shadow2 { 
-  box-shadow: 0 7px 30px -10px rgba(150,170,180,0.5);
+  box-shadow: 0 7px 30px -10px rgba(18, 18, 19, 0.5);
 }
 
 p {

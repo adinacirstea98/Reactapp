@@ -45,17 +45,17 @@ function Navbar() {
                 Home
               </Link>
             </li>
-            <li className='nav-item'>
-              <Link to='/services'
-                className='nav-links'
-                onClick={closeMobileMenu}
-              >
-                Books
-              </Link>
-            </li>
             {
               currentUser ? (
                 <>
+                  <li className='nav-item'>
+                    <Link to='/services'
+                      className='nav-links'
+                      onClick={closeMobileMenu}
+                    >
+                      Favorites
+                    </Link>
+                  </li>
                   <li className='nav-item'>
                     <Link to='/my-books'
                       className='nav-links'

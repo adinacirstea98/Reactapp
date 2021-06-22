@@ -79,6 +79,7 @@ function EditBook({
   category = "",
   language = "",
   description = "",
+  pageCount = "",
   imagePath = "",
   pdfPath = ""
 }) {
@@ -88,6 +89,7 @@ function EditBook({
     category,
     language,
     description,
+    pageCount,
     imagePath,
     pdfPath);
     const [loading, setLoading] = useState(false);
@@ -148,6 +150,10 @@ function EditBook({
                     <FormGroup>
                         <Label for="title">Title</Label>
                         <Input type="text" name="title" id="title" placeholder="book title" defaultValue={title} />
+                    </FormGroup>
+                    <FormGroup>
+                        <Label for="pageCount">Page count</Label>
+                        <Input type="text" name="pageCount" id="pageCount" placeholder="page count" />
                     </FormGroup>
                     <FormGroup>
                         <Label for="author">Author</Label>

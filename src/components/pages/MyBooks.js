@@ -1,12 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-  InputGroup,
-  Input,
-  InputGroupAddon,
-  FormGroup,
-  Label,
-  Spinner
-} from 'reactstrap';
+import { Spinner } from 'reactstrap';
 
 import { Link, useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -48,7 +41,6 @@ function MyBooks() {
   }, [uid]);
 
   const handleEdit = (id) => {
-    console.log(id, cards[id]);
     const card = cards.find(({ _id }) => _id === id);
     history.push({pathname: "/edit-book", state: card});
   };
@@ -88,13 +80,11 @@ function MyBooks() {
               id={item._id}
               thumbnail={item.imagePath}
               title={item.title}
-              // pageCount={item.volumeInfo.pageCount}
+              pageCount={item.pageCount}
               language={item.language}
               author={item.author}
-              // publisher={item.volumeInfo.publisher}
               description={item.description}
               previewLink={item.pdfPath}
-              // infoLink={item.volumeInfo.infoLink}
               handleEdit={handleEdit.bind(null, item._id)}
               handleDelete={handleDelete.bind(null, item._id)}
             />

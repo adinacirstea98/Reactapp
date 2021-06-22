@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { Card, CardTitle, CardImg, CardBody, Modal, ButtonGroup } from 'reactstrap';
 import Button from "react-bootstrap/Button";
+import Heart from "react-animated-heart";
 import "../App.css"
 
 const BookCard = ({
@@ -28,7 +29,7 @@ const BookCard = ({
   return (
     <Card body style={{ borderColor: '#333', width: '300px' }} className='card text-center'>
       <CardBody>
-        <CardTitle className="text-center" >{isFavorite && `(*)`}{title}
+        <CardTitle className="text-center" >{title}
         </CardTitle>
       </CardBody>
       <CardImg
@@ -43,9 +44,9 @@ const BookCard = ({
           <Button variant="outlined" onClick={handleToggleModal} style={{borderWidth: 1, borderColor: 'black'}}>More info</Button>
           {handleEdit && (<Button variant="outlined" style={{borderWidth: 1, borderColor: 'black'}} onClick={handleEdit}>Edit</Button>)}
           {handleDelete && (<Button variant="outlined" style={{borderWidth: 1, borderColor: 'black'}} onClick={handleDelete}>Delete</Button>)}
-          {handleFavorite && (<Button variant="outlined" style={{borderWidth: 1, borderColor: 'black'}} onClick={handleFavorite}>Favorite</Button>)}
           {handleReview && (<Button variant="outlined" style={{borderWidth: 1, borderColor: 'black'}} onClick={handleReview}>Review</Button>)}
         </ButtonGroup>
+        {handleFavorite && (<Heart isClick={isFavorite} onClick={handleFavorite}/>)}
       </CardBody>
 
       <Modal isOpen={modal} toggle={handleToggleModal}>
@@ -83,7 +84,7 @@ const BookCard = ({
               target='_blank'
               rel='noopener noreferrer'
             >
-              Preview Link
+              Read this book
             </a>
           </div>
         </div>

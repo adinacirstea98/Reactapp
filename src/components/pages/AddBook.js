@@ -127,6 +127,10 @@ function AddBook() {
                         <Input type="text" name="title" id="title" placeholder="book title" />
                     </FormGroup>
                     <FormGroup>
+                        <Label for="pageCount">Page count</Label>
+                        <Input type="text" name="pageCount" id="pageCount" placeholder="page count" />
+                    </FormGroup>
+                    <FormGroup>
                         <Label for="author">Author</Label>
                         <Input type="text" name="author" id="author" placeholder="book author" />
                     </FormGroup>

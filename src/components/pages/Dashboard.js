@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import {
   InputGroup,
   Input,
@@ -26,6 +27,15 @@ function Books() {
   const [cards, setCards] = useState([]);
   const { currentUser } = useAuth()
   const { uid } = currentUser;
+
+  const [dropdownOpenLanguage, setOpenLanguage] = useState(false);
+  const toggle1 = () => setOpenLanguage(!dropdownOpenLanguage);
+
+  const [dropdownOpenCategory, setOpenCategory] = useState(false);
+  const toggle2 = () => setOpenCategory(!dropdownOpenCategory);
+
+  const [dropdownOpenRating, setOpenRating] = useState(false);
+  const toggle3 = () => setOpenRating(!dropdownOpenRating);
 
   useEffect(() => {
     setLoading(true);
@@ -105,19 +115,11 @@ function Books() {
   const mainHeader = () => {
     return (
       <div className='main-image d-flex justify-content-center align-items-center flex-column'>
-        <div className='filter'></div>
-        <h1 className='display-2 text-center text-white mb-3' style={{ zIndex: 2 }}>
+        <div className=''></div>
+        <h1 className='display-2 text-center text-black mb-3' style={{ zIndex: 2 }}>
           Find a book!
         </h1>
         <div style={{ width: '60%', zIndex: 2 }}>
-          {/* <ButtonGroup style={{marginLeft:275, marginBottom:30}}>
-          <Button variant="outlined" style={{borderWidth: 1, borderColor: 'black'}}>All</Button>
-            <Button variant="outlined" style={{borderWidth: 1, borderColor: 'black'}}>Poetry</Button>
-            <Button variant="outlined" style={{borderWidth: 1, borderColor: 'black'}}>Article</Button>
-            <Button variant="outlined" style={{borderWidth: 1, borderColor: 'black'}}>Novel</Button>
-            <Button variant="outlined" style={{borderWidth: 1, borderColor: 'black'}}>Story</Button>
-            <Button variant="outlined" style={{borderWidth: 1, borderColor: 'black'}}>News</Button>
-          </ButtonGroup> */}
           <InputGroup size='lg' className='mb-3'>
             <Input placeholder='Book Search' value={query} onChange={e => setQuery(e.target.value)}/>
             <InputGroupAddon addonType='append'>
@@ -127,6 +129,58 @@ function Books() {
             </InputGroupAddon>
           </InputGroup>
           
+          <ButtonGroup style={{marginLeft:350}}>
+
+          
+          <ButtonDropdown isOpen={dropdownOpenLanguage} toggle={toggle1}>
+            <DropdownToggle caret>
+              Language
+            </DropdownToggle>
+            <DropdownMenu>
+              <DropdownItem>English</DropdownItem>
+              <DropdownItem divider />
+              <DropdownItem>German</DropdownItem>
+              <DropdownItem divider />
+              <DropdownItem>French</DropdownItem>
+              <DropdownItem divider />
+              <DropdownItem>Romanian</DropdownItem>
+            </DropdownMenu>
+          </ButtonDropdown>
+
+          <ButtonDropdown isOpen={dropdownOpenCategory} toggle={toggle2}>
+            <DropdownToggle caret>
+              Category
+            </DropdownToggle>
+            <DropdownMenu>
+              <DropdownItem>Poetry</DropdownItem>
+              <DropdownItem divider />
+              <DropdownItem>Article</DropdownItem>
+              <DropdownItem divider />
+              <DropdownItem>Novel</DropdownItem>
+              <DropdownItem divider />
+              <DropdownItem>Story</DropdownItem>
+              <DropdownItem divider />
+              <DropdownItem>News</DropdownItem>
+            </DropdownMenu>
+          </ButtonDropdown>
+
+          <ButtonDropdown isOpen={dropdownOpenRating} toggle={toggle3}>
+            <DropdownToggle caret>
+              Rating
+            </DropdownToggle>
+            <DropdownMenu>
+              <DropdownItem>5</DropdownItem>
+              <DropdownItem divider />
+              <DropdownItem>4</DropdownItem>
+              <DropdownItem divider />
+              <DropdownItem>3</DropdownItem>
+              <DropdownItem divider />
+              <DropdownItem>2</DropdownItem>
+              <DropdownItem divider />
+              <DropdownItem>1</DropdownItem>
+            </DropdownMenu>
+          </ButtonDropdown>
+          </ButtonGroup>
         </div>
       </div>
     );
@@ -147,13 +201,11 @@ function Books() {
               id={item._id}
               thumbnail={item.imagePath}
               title={item.title}
-              // pageCount={item.volumeInfo.pageCount}
+              pageCount={item.pageCount}
               language={item.language}
               author={item.author}
-              // publisher={item.volumeInfo.publisher}
               description={item.description}
               previewLink={item.pdfPath}
-              // infoLink={item.volumeInfo.infoLink}
               handleFavorite={handleFavorite.bind(null, item._id)}
               handleReview={handleReview.bind(null, item._id)}
               isFavorite={(item.users || []).includes(uid)}
