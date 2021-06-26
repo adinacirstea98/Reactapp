@@ -106,7 +106,9 @@ function AddBook() {
           history.push("/my-books");
         })
         .catch(err => {
-          toast.error(err.response);
+          const { response = {}} = err;
+          const { data = {}} = response;
+          toast.error(data.msg);
           setLoading(false);
         })
     }

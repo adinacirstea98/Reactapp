@@ -70,6 +70,19 @@ app.get("/all-books", async function(request, result) {
   }
 })
 
+// new RegExp('^' +search + '$', 'i')
+
+
+app.get("/books", async function(request, result) {
+  const query = { title: new RegExp(request.query.bookNameQuery, 'i') };
+  try {
+    const books = await client.db("BookLand").collection("books").find(query).toArray();
+    return result.status(200).send(books);
+  } catch (error) {
+    return result.status(500).json(error);
+  }
+})
+
 app.get("/favorites-books", async function(request, result) {
   const query = { users: {$in: [request.query.uid]} };
   try {
@@ -82,8 +95,12 @@ app.get("/favorites-books", async function(request, result) {
 
 app.post("/add-book", uploadFiles, async function(request, result) {
   const data = request.body || {};
-  const { image = [{}], pdf = [{}] } = request.files || {};
+  const { image = [{}], pdf } = request.files || {};
     
+  if (!pdf) {
+    return result.status(400).json({msg: "Book not found"});
+  }
+
   uploadFiles(request, result, async function (err) {
     if (err instanceof multer.MulterError) {
       return result.status(500).json(err);
@@ -148,11 +165,12 @@ app.patch("/rating-book/:id", async function(request, result) {
         comments: {
           comment, 
           userId,
-          email
+          email,
+          rating
         }
       },
     });
-    return result.status(200).send({});
+    return result.status(200).send({ rating, comment, userId, email });
   } catch (error) {
     console.log(error);
     return result.status(500).json(error);

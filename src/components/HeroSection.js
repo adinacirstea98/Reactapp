@@ -12,9 +12,6 @@ function HeroSection() {
       {/* <div className='hero-btns'> */}
       <div>
         <Button
-          // className='btns'
-          // buttonStyle='btn--outline'
-          // buttonSize='btn--large'
           > GET STARTED
         </Button>
       </div>

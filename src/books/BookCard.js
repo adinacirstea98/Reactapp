@@ -7,16 +7,13 @@ import Heart from "react-animated-heart";
 import "../App.css"
 
 const BookCard = ({
-  id,
   thumbnail,
   title,
   pageCount,
   language,
   description,
   author,
-  publisher,
   previewLink,
-  infoLink,
   handleEdit,
   handleDelete,
   handleFavorite,

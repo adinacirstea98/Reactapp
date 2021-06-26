@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Button, FormGroup, Label, Input, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { Button, FormGroup, Label, Input, Modal, ModalHeader, ModalBody, ModalFooter, ListGroup, ListGroupItem } from 'reactstrap';
 import axios from 'axios';
 import styled, { createGlobalStyle, css } from 'styled-components';
 import { useAuth } from "../../contexts/AuthContext";
@@ -75,16 +75,20 @@ const StyledFieldset = styled.fieldset`
 
 function Review({
   openCard,
-  handleToggle
+  handleToggle,
+  onSubmit
 }) {
     const history = useHistory();
     const { currentUser } = useAuth();
     const { uid, email } = currentUser;
     const isOpen = Boolean(openCard);
     const card = openCard || {};
+    const { comments = []} = card;
     const [stars, setStars] = useState(0);
     const [comment, setComment] = useState("");
     
+    console.log(card);
+
     useEffect(() => {
       if (isOpen) {
         setStars(0);
@@ -117,6 +121,7 @@ function Review({
         .then(res => {
           toast(`Book ${card.title} has been modified successfully`);
           handleToggle(false);
+          onSubmit(card._id, res.data);
         })
         .catch(err => {
           console.log(err);
@@ -128,6 +133,35 @@ function Review({
       <Modal isOpen={isOpen} toggle={handleToggle}>
         <ModalHeader toggle={handleToggle}>Add review for {card.title}:</ModalHeader>
         <ModalBody>
+          {
+            comments.length && (
+              <ListGroup className="test">
+                {
+                  comments.map(({ rating, comment, email }, id) => (
+                    <ListGroupItem key={id}>
+                      <div className="rating-header">
+                        <ReactStars
+                          count={5}
+                          edit={false}
+                          size={16}
+                          activeColor="#ffd700"
+                          value={rating}
+                          isHalf={false}
+                        />
+                        <strong>{ email }</strong>:
+                      </div>
+                      <div className="rating-body">
+                        <span>
+                          {comment}
+                        </span>
+                      </div>
+
+                    </ListGroupItem>
+                  ))
+                }
+              </ListGroup>
+            )
+          }
           <FormGroup>
             <Label for="comment">Comment</Label>
             <Input type="textarea" name="comment" id="comment" value={comment} onChange={handleCommentChanged} />

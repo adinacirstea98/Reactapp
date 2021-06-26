@@ -64,9 +64,11 @@ function Books() {
     setLoading(true);
     axios({
         method: "get",
-        url: "http://localhost:8080",
-        headers: {'Content-Type': "application/json" }
-
+        url: "http://localhost:8080/books",
+        headers: {'Content-Type': "application/json" },
+        params: {
+          bookNameQuery: query
+        }
       })
       .then(res => {
         const { data } = res;
@@ -117,6 +119,17 @@ function Books() {
       setOpenCard(cards.find(({ _id }) => _id === id));
     }
   };
+
+  const handleSubmitReview = (cardId, comment) => {
+    const newCards = [...cards];
+    const card = newCards.find(({ _id }) => _id === cardId);
+    if (card.comments) {
+      card.comments.push(comment);
+    } else {
+      card.comments = [comment];
+    }
+    setCards(newCards);
+  }
 
   // Main Show Case
   const mainHeader = () => {
@@ -235,6 +248,7 @@ function Books() {
       <Review
         openCard={openCard}
         handleToggle={handleReview}
+        onSubmit={handleSubmitReview}
       />
     </div>
   );

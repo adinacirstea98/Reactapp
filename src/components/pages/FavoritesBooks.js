@@ -106,10 +106,7 @@ function FavoritesBooks() {
   
   return (
     <div className='background-img' >
-      <p className='cls'>Favorites books</p>
-      <Link to='/add-book'>
-        <Button variant="light" style={{ marginLeft: 690 }}>Add a new book</Button>
-      </Link>
+      <p className='cls'>My favorite books</p>
       <div>
         {handleCards()}
       </div>
